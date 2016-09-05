@@ -10,19 +10,21 @@ var obj = {
 					img.src = "https://farm"+photos[i].farm+".staticflickr.com/"+photos[i].server+"/"+photos[i].id+"_"+photos[i].secret+"_t.jpg";
 					img.addEventListener("click", full);
 					img.id = photos[i].id;
-					var div = add_div();
+					var div = add_div(img);
 					container.appendChild(div);
-					div.appendChild(img);
+				
 					var check = document.createElement("INPUT");
 					check.type = "checkbox";
 					check.id = i;
 					check.addEventListener("click", add);
 					div.appendChild(check);
 					++x;
+					//new row
 					if(x == 4){
 						container = add_container(document.getElementById("images"));
 						x = 0;
 					}
+				
 					if(i == photos.length-1){
 						cb();
 					}
@@ -82,13 +84,11 @@ function search(){
 	http.open("POST", "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=017915ee3b3a899d4e8ecc31125dbb69&nojsoncallback=1&format=json&text="+val );
 	http.send();
 }
-
+//adds to gallery
 function add(event){
-	
-	
+		
 	var id = event.target.id;
 	arr.push("https://farm"+list[id].farm+".staticflickr.com/"+list[id].server+"/"+list[id].id+"_"+list[id].secret+"_t.jpg");
-		
 	
 }
 
@@ -101,17 +101,19 @@ function showGallery(){
 	var x = 0;
 	for(var i = 0; i < arr.length ; ++i){
 		img = document.createElement("IMG");
-		var div = add_div();
+		img.src = arr[i];
+		img.addEventListener("click", full);
+		
+		var div = add_div(img);
+		container.appendChild(div);
+		
 		var input = document.createElement("INPUT");
 		input.type = "button";
 		input.addEventListener("click", delete_image);
 		input.param = i;
 		input.className = "delete";
 		input.value = "X";
-		img.src = arr[i];
-		img.addEventListener("click", full);
-		container.appendChild(div);
-		div.appendChild(img);
+		
 		div.appendChild(input);
 		x++;
 		if(x == 4){
@@ -133,14 +135,15 @@ function add_container(div){
 	
 }
 
-function add_div(){
+function add_div(img){
 	
 	var div = document.createElement("DIV");
 	div.className = "image";
+	div.appendChild(img);
 	return div;
 }
 
-
+//delete from gallery
 function delete_image(event){
 	
 	arr.splice(event.target.param, 1);
